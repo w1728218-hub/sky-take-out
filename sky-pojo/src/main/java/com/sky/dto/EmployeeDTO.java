@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class EmployeeDTO implements Serializable {
 
 
-
+   private Long id;
     private String username;
 
     private String name;
