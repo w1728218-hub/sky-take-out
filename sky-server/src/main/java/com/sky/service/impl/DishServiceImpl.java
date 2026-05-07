@@ -48,13 +48,13 @@ public class DishServiceImpl implements DishService {
     //获取insert语句生成的主键值
     Long dishId = dish.getId();
 
-    //向口味表插入多条数据
+    //给每个口味设置所属菜品ID
     List<DishFlavor> flavors = dishDTO.getFlavors();
     if(flavors!=null&&flavors.size()>0){
         flavors.forEach(dishFlavor -> {
             dishFlavor.setDishId(dishId);
         });
-        //向口味表插入n条数据
+        //批量插入口味
     dishFlavorMapper.insertBatch(flavors);
     }
 
@@ -142,6 +142,7 @@ public class DishServiceImpl implements DishService {
         //重新插入口味数据
         List<DishFlavor> flavors = dishDTO.getFlavors();
         if(flavors!=null&&flavors.size()>0){
+        //给每个口味设置菜品ID
             flavors.forEach(dishFlavor -> {
                 dishFlavor.setDishId(dishDTO.getId());
             });
