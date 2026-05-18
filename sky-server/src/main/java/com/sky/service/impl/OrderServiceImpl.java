@@ -418,10 +418,13 @@ return  orderVOList;
      */
     @Override
     public void complete(Long id) {
+        //根据id查询订单
         Orders orders = orderMapper.getById(id);
+        //检验订单是否存在，并且状态为4
         if(orders==null||!orders.getStatus().equals(Orders.DELIVERY_IN_PROGRESS)){
             throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
         }
+        //更新订单状态，状态转为完成
         orders.setStatus(Orders.COMPLETED);
         orders.setDeliveryTime(LocalDateTime.now());
         orderMapper.update(orders);
@@ -477,5 +480,25 @@ return  orderVOList;
         if (distance > 5000) {
             throw new OrderBusinessException("收货地址距离商家超出配送范围");
         }
+    }
+
+    /**
+     * 客户催单
+     * @param id
+     */
+    @Override
+    public void reminder(Long id) {
+        //根据id查询订单
+        Orders orders = orderMapper.getById(id);
+        //检验订单是否存在
+        if(orders==null){
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+        Map map = new HashMap();
+        map.put("type",2);//1表示来单提醒，2表示客户催单
+        map.put("id", orders.getId());
+        map.put("content","订单号"+orders.getNumber());
+       //通过websocket向客户端浏览器推送消息
+        webSocketServer.sendToAllClient(JSON.toJSONString(map));
     }
 }
