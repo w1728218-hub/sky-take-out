@@ -9,3 +9,4 @@ public class JwtClaimsConstant {
     public static final String NAME = "name";
 
 }
+
